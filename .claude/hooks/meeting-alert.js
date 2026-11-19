@@ -13,6 +13,7 @@
     time: "10:01am",
     room: "room 999",
     title: "IT meeting",
+    speech: "Reminder. I T meeting next Wednesday at ten oh one A M, in room nine nine nine.",
     storageKey: "itMeetingAlertShown"
   };
 
@@ -44,6 +45,8 @@
       ".meeting-alert strong{color:#d6307f}" +
       ".meeting-alert button{margin-top:18px;min-height:44px;padding:8px 32px;border:0;border-radius:999px;cursor:pointer;" +
       "font:inherit;font-weight:600;color:#fff;background:linear-gradient(135deg,#ff6fb1,#8b5cf6);box-shadow:0 6px 0 #5b34c4}" +
+      ".meeting-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}" +
+      ".meeting-alert .meeting-listen{color:#5b34c4;background:#efe8ff;box-shadow:0 6px 0 #cdbdf5}" +
       ".meeting-alert button:active{transform:translateY(4px);box-shadow:0 2px 0 #5b34c4}" +
       ".meeting-alert button:focus-visible{outline:3px solid #8b5cf6;outline-offset:3px}" +
       "@media (prefers-reduced-motion:reduce){.meeting-alert[open]{animation:none}}";
@@ -75,14 +78,38 @@
     var date = document.createElement("p"); date.textContent = when;
     var ok = document.createElement("button"); ok.type = "button"; ok.textContent = "Got it!";
 
-    ok.addEventListener("click", function () { dlg.close(); });
-    dlg.addEventListener("close", function () { dlg.remove(); });
-    [h, p, date, ok].forEach(function (n) { dlg.appendChild(n); });
+    var listen = document.createElement("button"); listen.type = "button"; listen.className = "meeting-listen";
+    listen.textContent = "Read it aloud";
+    listen.addEventListener("click", function () { speak(); });
+
+    ok.addEventListener("click", function () { stopSpeaking(); dlg.close(); });
+    dlg.addEventListener("close", function () { stopSpeaking(); dlg.remove(); });
+    var row = document.createElement("div"); row.className = "meeting-row";
+    row.appendChild(listen); row.appendChild(ok);
+    [h, p, date, row].forEach(function (n) { dlg.appendChild(n); });
+    if (!("speechSynthesis" in window)) listen.hidden = true;
     document.body.appendChild(dlg);
 
     markShown();
     dlg.showModal();
     ok.focus();
+
+    // Browsers only allow speech after the visitor has clicked/tapped/typed on the page.
+    // If they already have, speak right away; otherwise they can press "Read it aloud".
+    if (navigator.userActivation && navigator.userActivation.hasBeenActive) speak();
+  }
+
+  function speak() {
+    if (!("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(CONFIG.speech);
+      u.rate = 0.95; u.pitch = 1.1; u.volume = 1;
+      window.speechSynthesis.speak(u);
+    } catch (e) { /* speech is a nice-to-have */ }
+  }
+  function stopSpeaking() {
+    try { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); } catch (e) { /* ignore */ }
   }
 
   // Count only time the tab is actually visible.
