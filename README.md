@@ -1,6 +1,6 @@
 # Project Board Demo
 
-A standalone, static project-board demo implemented in `index.html`, with a colourful, playful design.
+A standalone, static project-board demo implemented in `index.html`, with a clean, professional design (navy and slate palette, Inter typeface).
 
 ## Features
 
@@ -8,8 +8,10 @@ A standalone, static project-board demo implemented in `index.html`, with a colo
 - **Three tabs:** Status (drag-and-drop kanban board), Timeline (tasks by due date) and Projects (progress per project).
 - **Filters** by project, assignee and priority, applied across all tabs.
 - **Add, move and delete tasks**, with form validation.
-- **3D-styled headings and numbers**, with motion turned off when the browser asks for reduced motion.
+- **IT assistant chatbot** (bottom right): a text question-and-answer assistant that searches built-in help notes and the live board, then answers with its sources. It runs entirely in the browser and speaks a short greeting when opened.
+- **Meeting reminder popup** after 10 seconds on the page.
 - **Optional background music**, generated in the browser with the Web Audio API. It starts only when you press play.
+- **Accessibility:** keyboard-friendly controls, clear focus outlines, and motion turned off when the browser asks for reduced motion.
 
 ## Run locally
 

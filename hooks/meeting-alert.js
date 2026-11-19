@@ -34,21 +34,22 @@
   function injectStyles() {
     var s = document.createElement("style");
     s.textContent =
-      ".meeting-alert{border:4px solid #ff6fb1;border-radius:28px;padding:28px 32px;max-width:440px;width:calc(100% - 32px);" +
-      "background:#fff;color:#2b2250;font-family:'Fredoka','Nunito',system-ui,sans-serif;text-align:center;" +
-      "box-shadow:0 24px 60px rgba(91,52,196,.4)}" +
-      ".meeting-alert::backdrop{background:rgba(43,34,80,.55);backdrop-filter:blur(4px)}" +
-      ".meeting-alert[open]{animation:meetingPop .35s cubic-bezier(.2,.9,.3,1.3)}" +
-      "@keyframes meetingPop{from{opacity:0;transform:perspective(800px) rotateX(-30deg) scale(.9)}to{opacity:1;transform:none}}" +
-      ".meeting-alert h2{margin:0 0 8px;font-size:1.7rem;color:#5b34c4}" +
-      ".meeting-alert p{margin:6px 0;font-size:1.1rem;line-height:1.45}" +
-      ".meeting-alert strong{color:#d6307f}" +
-      ".meeting-alert button{margin-top:18px;min-height:44px;padding:8px 32px;border:0;border-radius:999px;cursor:pointer;" +
-      "font:inherit;font-weight:600;color:#fff;background:linear-gradient(135deg,#ff6fb1,#8b5cf6);box-shadow:0 6px 0 #5b34c4}" +
-      ".meeting-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}" +
-      ".meeting-alert .meeting-listen{color:#5b34c4;background:#efe8ff;box-shadow:0 6px 0 #cdbdf5}" +
-      ".meeting-alert button:active{transform:translateY(4px);box-shadow:0 2px 0 #5b34c4}" +
-      ".meeting-alert button:focus-visible{outline:3px solid #8b5cf6;outline-offset:3px}" +
+      ".meeting-alert{border:1px solid #c3ccd9;border-top:4px solid #2563eb;border-radius:12px;padding:24px 28px;max-width:440px;width:calc(100% - 32px);" +
+      "background:#fff;color:#111c2d;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;text-align:left;" +
+      "box-shadow:0 20px 50px rgba(15,39,66,.35)}" +
+      ".meeting-alert::backdrop{background:rgba(15,39,66,.55)}" +
+      ".meeting-alert[open]{animation:meetingPop .2s ease-out}" +
+      "@keyframes meetingPop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}" +
+      ".meeting-alert h2{margin:0 0 8px;font-size:1.25rem;color:#0f2742}" +
+      ".meeting-alert p{margin:6px 0;font-size:1rem;line-height:1.5}" +
+      ".meeting-alert strong{color:#1d4ed8}" +
+      ".meeting-alert button{margin-top:16px;min-height:44px;padding:8px 20px;border:1px solid #2563eb;border-radius:8px;cursor:pointer;" +
+      "font:inherit;font-weight:600;color:#fff;background:#2563eb}" +
+      ".meeting-alert button:hover{background:#1d4ed8}" +
+      ".meeting-row{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap}" +
+      ".meeting-alert .meeting-listen{color:#1d4ed8;background:#fff;border-color:#c3ccd9}" +
+      ".meeting-alert .meeting-listen:hover{background:#eef1f5}" +
+      ".meeting-alert button:focus-visible{outline:3px solid #2563eb;outline-offset:2px}" +
       "@media (prefers-reduced-motion:reduce){.meeting-alert[open]{animation:none}}";
     document.head.appendChild(s);
   }
@@ -76,7 +77,7 @@
     p.appendChild(strong);
     p.appendChild(document.createTextNode(", " + CONFIG.room + "."));
     var date = document.createElement("p"); date.textContent = when;
-    var ok = document.createElement("button"); ok.type = "button"; ok.textContent = "Got it!";
+    var ok = document.createElement("button"); ok.type = "button"; ok.textContent = "OK";
 
     var listen = document.createElement("button"); listen.type = "button"; listen.className = "meeting-listen";
     listen.textContent = "Read it aloud";
