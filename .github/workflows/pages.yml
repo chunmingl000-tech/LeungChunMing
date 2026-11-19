@@ -24,6 +24,9 @@ jobs:
         run: |
           mkdir site
           cp index.html site/index.html
+          mkdir site/hooks
+          cp .claude/hooks/meeting-alert.js site/hooks/meeting-alert.js
+          sed -i 's#\.claude/hooks/#hooks/#' site/index.html
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact

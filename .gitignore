@@ -1,7 +1,8 @@
 # Editor lock files
 ~$*
 # Local assistant settings and unrelated documents
-.claude/
+.claude/*
+!.claude/hooks/
 .github/prompts/
 *.docx
 *.xlsx
