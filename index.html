@@ -216,7 +216,7 @@ main, header, nav, section.filters { position: relative; z-index: 1; }
 .form-actions { display: flex; justify-content: flex-end; gap: var(--sp-3); margin-top: var(--sp-4); }
 
 /* ===== Toasts ===== */
-.toasts { position: fixed; right: var(--sp-4); bottom: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-2); z-index: 100; max-width: calc(100vw - 32px); }
+.toasts { position: fixed; left: var(--sp-4); bottom: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-2); z-index: 100; max-width: calc(100vw - 32px); }
 .toast { background: var(--ink); color: #fff; padding: var(--sp-3) var(--sp-5); border-radius: 999px; box-shadow: 0 8px 20px rgba(0,0,0,.25); font-weight: 700; border-left: 10px solid var(--mint); animation: pop .3s ease-out; }
 
 /* ===== Responsive ===== */
@@ -272,6 +272,44 @@ body { background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%; animation: a
 .title3d { font-size: clamp(2.6rem, 7vw, 5rem); }
 .title3d span { background: linear-gradient(180deg, #fff 40%, #ffe1f2); -webkit-background-clip: text; background-clip: text; }
 .blob { box-shadow: inset -12px -12px 24px rgba(0,0,0,.12), inset 10px 10px 20px rgba(255,255,255,.6); }
+
+/* ===== Chatbot widget (bottom right) ===== */
+.chat-launcher { position: fixed; right: 20px; bottom: 20px; z-index: 90; width: 84px; height: 84px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: radial-gradient(circle at 30% 25%, #fff, #ffd9ee 60%, #e3d4ff); box-shadow: 0 10px 0 rgba(91,52,196,.28), 0 18px 30px rgba(91,52,196,.35); animation: chatBob 3s ease-in-out infinite; transition: transform .15s; }
+.chat-launcher:hover { transform: scale(1.08) rotate(-4deg); }
+.chat-launcher:active { transform: scale(.96); }
+@keyframes chatBob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
+.chat-launcher svg { width: 100%; height: 100%; display: block; }
+.chat-launcher .eye { transform-origin: center; transform-box: fill-box; animation: blink 4.5s infinite; }
+@keyframes blink { 0%,94%,100% { transform: scaleY(1) } 97% { transform: scaleY(.1) } }
+.chat-hint { position: fixed; right: 112px; bottom: 52px; z-index: 89; background: #fff; border: 3px solid var(--pink); border-radius: 18px 18px 4px 18px; padding: 6px 14px; font-family: var(--font-head); font-weight: 600; color: var(--purple-d); box-shadow: 0 6px 14px rgba(91,52,196,.2); animation: pop .4s ease-out; }
+.chat-badge { position: absolute; top: 0; right: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--mint); border: 3px solid #fff; }
+
+.chat-panel { position: fixed; right: 20px; bottom: 120px; z-index: 91; width: min(380px, calc(100vw - 32px)); height: min(560px, calc(100vh - 150px)); display: flex; flex-direction: column;
+  background: #fff; border: 4px solid var(--pink); border-radius: 28px; overflow: hidden; box-shadow: 0 24px 60px rgba(91,52,196,.4); transform-origin: bottom right; animation: chatOpen .35s cubic-bezier(.2,.9,.3,1.2); }
+@keyframes chatOpen { from { opacity: 0; transform: perspective(900px) rotateX(-20deg) scale(.85) } to { opacity: 1; transform: none } }
+.chat-head { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); background: linear-gradient(135deg, var(--pink), var(--purple)); color: #fff; }
+.chat-head .mini { width: 44px; height: 44px; border-radius: 50%; background: #fff; flex: 0 0 auto; }
+.chat-head h2 { margin: 0; font-family: var(--font-head); font-size: 1.1rem; line-height: 1.1; }
+.chat-head small { opacity: .95; font-weight: 700; }
+.chat-close { margin-left: auto; width: 44px; height: 44px; border: 0; border-radius: 50%; cursor: pointer; background: rgba(255,255,255,.25); color: #fff; display: grid; place-items: center; }
+.chat-close:hover { background: rgba(255,255,255,.4); }
+.chat-close svg { width: 20px; height: 20px; }
+.chat-log { flex: 1; overflow-y: auto; padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3); background: linear-gradient(#fff7fc, #f4efff); }
+.msg { max-width: 88%; padding: 10px 14px; border-radius: 18px; line-height: 1.45; overflow-wrap: anywhere; white-space: pre-wrap; animation: pop .25s ease-out; }
+.msg.bot { align-self: flex-start; background: #fff; border: 2px solid var(--line); border-bottom-left-radius: 4px; }
+.msg.user { align-self: flex-end; background: linear-gradient(135deg, var(--purple), var(--pink-d)); color: #fff; border-bottom-right-radius: 4px; }
+.msg .src { display: block; margin-top: 6px; font-size: .75rem; font-weight: 700; color: var(--ink-soft); white-space: normal; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { min-height: 44px; padding: 4px 14px; border-radius: 999px; border: 2px solid var(--line); background: #fff; cursor: pointer; font-size: .85rem; font-weight: 700; color: var(--purple-d); }
+.chip:hover { background: #efe8ff; }
+.chat-form { display: flex; gap: var(--sp-2); padding: var(--sp-3); border-top: 2px solid var(--line); background: #fff; }
+.chat-form input { flex: 1; min-width: 0; min-height: 44px; border: 2px solid var(--line); border-radius: 999px; padding: 4px 16px; }
+.chat-form button { min-width: 44px; min-height: 44px; border: 0; border-radius: 50%; cursor: pointer; color: #fff; background: linear-gradient(135deg, var(--pink), var(--purple)); display: grid; place-items: center; }
+.chat-form button svg { width: 20px; height: 20px; }
+.typing { display: inline-flex; gap: 4px; } .typing i { width: 8px; height: 8px; border-radius: 50%; background: var(--purple); animation: eq .8s ease-in-out infinite; } .typing i:nth-child(2) { animation-delay: -.25s; } .typing i:nth-child(3) { animation-delay: -.5s; }
+@media (max-width: 640px) { .chat-hint { display: none; } .chat-launcher { width: 72px; height: 72px; right: 12px; bottom: 12px; } .chat-panel { right: 12px; bottom: 96px; } .toasts { bottom: 96px; } }
+@media (prefers-reduced-motion: reduce) { .chat-launcher, .chat-panel, .msg { animation: none !important; } .chat-launcher .eye { animation: none !important; } }
 .b4 { width: 70px; height: 70px; background: #ffe38a; top: 40%; left: 48%; animation-delay: -2s; }
 .b5 { width: 100px; height: 100px; background: #9ff0d3; top: 8%; right: 12%; animation-delay: -5s; }
 @media (max-width: 640px) { .scene { display: none; } }
@@ -412,6 +450,35 @@ body { background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%; animation: a
 </div>
 
 <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<!-- ===== IT assistant chatbot (text RAG, bottom right) ===== -->
+<div class="chat-hint" id="chatHint" role="presentation">Hi! Ask me anything</div>
+<button type="button" class="chat-launcher" id="chatLauncher" data-chatbot-launcher aria-expanded="false" aria-controls="chatPanel" aria-label="Open IT assistant chat">
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <line x1="50" y1="12" x2="50" y2="22" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="50" cy="10" r="5" fill="#ff6fb1"/>
+    <ellipse cx="22" cy="55" rx="7" ry="11" fill="#c9b3ff"/><ellipse cx="78" cy="55" rx="7" ry="11" fill="#c9b3ff"/>
+    <rect x="22" y="22" width="56" height="62" rx="26" fill="#fff" stroke="#8b5cf6" stroke-width="4"/>
+    <rect x="31" y="38" width="38" height="26" rx="13" fill="#2b2250"/>
+    <ellipse class="eye" cx="41" cy="51" rx="4.5" ry="6" fill="#7fe8ff"/><ellipse class="eye" cx="59" cy="51" rx="4.5" ry="6" fill="#7fe8ff"/>
+    <ellipse cx="29" cy="70" rx="6" ry="4" fill="#ffb3d9" opacity=".9"/><ellipse cx="71" cy="70" rx="6" ry="4" fill="#ffb3d9" opacity=".9"/>
+    <path d="M44 72 Q50 78 56 72" fill="none" stroke="#d6307f" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <span class="chat-badge" aria-hidden="true"></span>
+</button>
+<section class="chat-panel" id="chatPanel" role="dialog" aria-labelledby="chatTitle" hidden>
+  <div class="chat-head">
+    <svg class="mini" viewBox="0 0 100 100" aria-hidden="true"><rect x="18" y="18" width="64" height="68" rx="28" fill="#fff" stroke="#8b5cf6" stroke-width="4"/><rect x="29" y="38" width="42" height="28" rx="14" fill="#2b2250"/><ellipse cx="41" cy="52" rx="5" ry="7" fill="#7fe8ff"/><ellipse cx="59" cy="52" rx="5" ry="7" fill="#7fe8ff"/><path d="M43 74 Q50 81 57 74" fill="none" stroke="#d6307f" stroke-width="3" stroke-linecap="round"/></svg>
+    <div><h2 id="chatTitle">IT Assistant</h2><small>Answers from the board and the help notes</small></div>
+    <button type="button" class="chat-close" id="chatClose" aria-label="Close chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-label="Chat messages"></div>
+  <form class="chat-form" id="chatForm" autocomplete="off">
+    <label for="chatInput" class="sr-only">Type your question</label>
+    <input type="text" id="chatInput" maxlength="200" placeholder="Ask about tasks, meetings, how-tos…">
+    <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20l18-8L3 4v6l11 2-11 2z"/></svg></button>
+  </form>
+</section>
 
 <script>
 "use strict";
@@ -851,5 +918,152 @@ init();
 </script>
 <!-- Meeting reminder hook: popup after 10 seconds on the page -->
 <script src="hooks/meeting-alert.js"></script>
+<!-- Chatbot greeting hook: speaks when the chatbot avatar is clicked -->
+<script src="hooks/chatbot-greeting.js"></script>
+<script>
+"use strict";
+/* ===== IT Assistant: text RAG chatbot, runs fully in the browser =====
+   Retrieve: BM25 ranking over help-note chunks + live board data (rebuilt for every question).
+   Generate: the answer is composed from the best-matching chunks (extractive, no external AI service).
+   Nothing typed here leaves the page. */
+(function () {
+  var STOP = "a an the is are was were be to of in on at for and or it this that i you my me can do does how what when where who which with about please tell show give any there their your".split(" ");
+  function stem(w) { return w.replace(/(ing|ed|es|s)$/, function (m, s, off, str) { return str.length - m.length >= 3 ? "" : m; }); }
+  function tokens(text) {
+    return String(text).toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/)
+      .filter(function (w) { return w && STOP.indexOf(w) === -1; }).map(stem);
+  }
+
+  /* ---- Knowledge base: help notes about this app (static chunks) ---- */
+  function meetingDate() {
+    var d = new Date(), add = (3 - d.getDay() + 7) % 7; d.setDate(d.getDate() + (add === 0 ? 7 : add));
+    return d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
+  }
+  function staticKb() {
+    return [
+      { title: "IT meeting", text: "The IT meeting is next Wednesday (" + meetingDate() + ") at 10:01am in room 999.", tags: "it meeting wednesday room schedule calendar when appointment 10:01" },
+      { title: "Add a task", text: "To add a task, press the Add Task button at the top. Fill in the title, project, category, assignee and due date (required), then press Add Task. The due date cannot be in the past.", tags: "add create new task how form submit" },
+      { title: "Move a task", text: "Drag a card to another column on the Status tab, or use the Move to… menu on the card. Moving a task to Done plays a little chime if the music is on.", tags: "move drag drop change status column done progress blocked backlog" },
+      { title: "Delete a task", text: "Press the bin icon on a card, then choose Yes to confirm. Deleting cannot be undone, and tasks reset anyway when the page is refreshed.", tags: "delete remove task bin trash" },
+      { title: "Filters", text: "Use Project, Assignee and Priority above the tabs to narrow the tasks. The filters apply to the Status, Timeline and Projects tabs together. Press Clear filters to reset them.", tags: "filter search find narrow project assignee priority clear" },
+      { title: "Tabs", text: "Status shows the kanban board. Timeline lists tasks by due date with a Today marker. Projects shows progress for each project. Use the arrow keys to move between tabs.", tags: "tab status timeline projects view board kanban navigation" },
+      { title: "Big KPI tiles", text: "The big tiles show Total tasks, In progress, Blocked, Overdue, and Complete percentage (done tasks divided by all tasks). They update when you add, move or delete tasks.", tags: "kpi number tile dashboard metric complete percentage total count" },
+      { title: "Statuses and priorities", text: "Statuses are Backlog, In Progress, Blocked and Done. Priorities are Critical, High, Medium and Low. The coloured edge on each card shows its priority.", tags: "status priority critical high medium low backlog blocked colour level" },
+      { title: "Overdue tasks", text: "A task is overdue when its due date has passed and it is not Done. Overdue tasks get a red badge and a red dot on the Timeline.", tags: "overdue late past due red badge" },
+      { title: "Music", text: "Press the yellow play button to start the happy background music. It never starts by itself because browsers block sound until you interact with the page. Use the slider to change the volume.", tags: "music sound audio play volume song background silent hear" },
+      { title: "Voice and sound", text: "The meeting popup and this chat assistant can speak using your browser's built-in voice. Browsers only allow speech after you have clicked or typed on the page, and your device volume must be on.", tags: "voice speak speech audio sound hear read aloud talk silent" },
+      { title: "Privacy and data", text: "Board data stays in memory only and resets to the sample tasks when you refresh. Nothing you type here or on the board is sent to a server or an AI service.", tags: "privacy data save stored refresh reset memory secure safe external server" },
+      { title: "Accessibility", text: "Every control works with the keyboard, focus is clearly outlined, and animations switch off when your device asks for reduced motion.", tags: "accessibility keyboard screen reader motion focus a11y" },
+      { title: "About this assistant", text: "I am a small retrieval chatbot. For every question I search the help notes and the live board (tasks, projects, counts), then answer from the best matches and show my sources. I do not use an external AI, so I can only answer what is in those notes.", tags: "assistant chatbot bot rag who are you how work ai help" }
+    ];
+  }
+
+  /* ---- Live board chunks (rebuilt each question, so answers match what you see) ---- */
+  function boardKb() {
+    var chunks = [], tasks = (typeof state !== "undefined" && state.tasks) ? state.tasks : [];
+    var by = function (s) { return tasks.filter(function (t) { return t.status === s; }); };
+    var late = tasks.filter(isOverdue), done = by("Done");
+    var pct = tasks.length ? Math.round(done.length / tasks.length * 100) : 0;
+    var names = function (a) { return a.length ? a.map(function (t) { return t.id + " " + t.title; }).join("; ") : "none"; };
+    chunks.push({ title: "Board summary", tags: "summary total count how many tasks overview status board numbers",
+      text: "There are " + tasks.length + " tasks: " + by("Backlog").length + " in Backlog, " + by("In Progress").length + " in progress, " + by("Blocked").length + " blocked and " + done.length + " done (" + pct + "% complete). " + late.length + " are overdue." });
+    chunks.push({ title: "Overdue list", tags: "overdue late past due urgent which", text: "Overdue tasks (" + late.length + "): " + names(late) + "." });
+    chunks.push({ title: "Blocked list", tags: "blocked stuck waiting help which", text: "Blocked tasks (" + by("Blocked").length + "): " + names(by("Blocked")) + "." });
+    chunks.push({ title: "In progress list", tags: "progress doing working active current which", text: "Tasks in progress (" + by("In Progress").length + "): " + names(by("In Progress")) + "." });
+    chunks.push({ title: "Done list", tags: "done finished complete completed which", text: "Completed tasks (" + done.length + "): " + names(done) + "." });
+    var crit = tasks.filter(function (t) { return t.priority === "Critical" && t.status !== "Done"; });
+    chunks.push({ title: "Critical tasks", tags: "critical urgent highest priority important", text: "Open critical tasks (" + crit.length + "): " + names(crit) + "." });
+    tasks.forEach(function (t) {
+      chunks.push({ title: t.id, tags: t.project + " " + t.category + " " + t.assignee + " " + t.priority + " " + t.status,
+        text: t.id + " \"" + t.title + "\" is " + t.status + ", priority " + t.priority + ", project " + t.project + ", category " + t.category + ", owner " + t.assignee + ", due " + formatDate(t.dueDate) + (isOverdue(t) ? " (overdue)" : "") + "." });
+    });
+    PROJECTS.forEach(function (p) {
+      var pt = tasks.filter(function (t) { return t.project === p; });
+      if (!pt.length) return;
+      var pd = pt.filter(function (t) { return t.status === "Done"; }).length;
+      chunks.push({ title: "Project: " + p, tags: p + " project progress workstream",
+        text: p + " has " + pt.length + " task" + (pt.length === 1 ? "" : "s") + ", " + pd + " done (" + Math.round(pd / pt.length * 100) + "%). Tasks: " + names(pt) + "." });
+    });
+    return chunks;
+  }
+
+  /* ---- Retrieval: BM25 ---- */
+  function retrieve(query, chunks, k) {
+    var q = tokens(query); if (!q.length) return [];
+    var docs = chunks.map(function (c) { var t = tokens(c.title + " " + c.title + " " + c.tags + " " + c.text); return { c: c, t: t }; });
+    var N = docs.length, avg = docs.reduce(function (s, d) { return s + d.t.length; }, 0) / N;
+    var df = {}; docs.forEach(function (d) { var seen = {}; d.t.forEach(function (w) { if (!seen[w]) { seen[w] = 1; df[w] = (df[w] || 0) + 1; } }); });
+    var k1 = 1.4, b = 0.7;
+    var scored = docs.map(function (d) {
+      var s = 0, tf = {}; d.t.forEach(function (w) { tf[w] = (tf[w] || 0) + 1; });
+      q.forEach(function (w) {
+        if (!tf[w]) return;
+        var idf = Math.log(1 + (N - df[w] + 0.5) / (df[w] + 0.5));
+        s += idf * (tf[w] * (k1 + 1)) / (tf[w] + k1 * (1 - b + b * d.t.length / avg));
+      });
+      return { c: d.c, score: s };
+    }).filter(function (r) { return r.score > 0; }).sort(function (a, b2) { return b2.score - a.score; });
+    return scored.slice(0, k);
+  }
+
+  /* ---- Answer composition ---- */
+  var GREET = /^(hi|hello|hey|yo|good (morning|afternoon|evening)|thanks|thank you|ok|okay)\b/i;
+  function answer(question) {
+    if (GREET.test(question.trim()) && tokens(question).length < 3) {
+      return { text: /thank/i.test(question) ? "You're welcome! Anything else?" : "Hello! Ask me about the board, tasks, the IT meeting or how to use this page.", sources: [] };
+    }
+    var hits = retrieve(question, staticKb().concat(boardKb()), 3);
+    if (!hits.length || hits[0].score < 0.6) {
+      return { text: "Sorry, I couldn't find that in my notes. Try asking about overdue tasks, the IT meeting, how to add a task, or a task number like TASK-0002.", sources: [] };
+    }
+    var best = hits[0], parts = [best.c.text], sources = [best.c.title];
+    hits.slice(1).forEach(function (h) {
+      if (h.score >= best.score * 0.6 && parts.length < 2 && best.c.title.indexOf("TASK-") !== 0) { parts.push(h.c.text); sources.push(h.c.title); }
+    });
+    return { text: parts.join("\n\n"), sources: sources };
+  }
+
+  /* ---- UI ---- */
+  var launcher = document.getElementById("chatLauncher"), panel = document.getElementById("chatPanel"), log = document.getElementById("chatLog"),
+      form = document.getElementById("chatForm"), input = document.getElementById("chatInput"), hint = document.getElementById("chatHint"),
+      closeBtn = document.getElementById("chatClose"), started = false;
+
+  function addMsg(who, text, sources) {
+    var m = document.createElement("div"); m.className = "msg " + who; m.textContent = text;
+    if (sources && sources.length) { var s = document.createElement("span"); s.className = "src"; s.textContent = "Sources: " + sources.join(", "); m.appendChild(s); }
+    log.appendChild(m); log.scrollTop = log.scrollHeight; return m;
+  }
+  function addChips() {
+    var wrap = document.createElement("div"); wrap.className = "chips";
+    ["When is the IT meeting?", "Which tasks are overdue?", "How do I add a task?", "Board summary"].forEach(function (q) {
+      var c = document.createElement("button"); c.type = "button"; c.className = "chip"; c.textContent = q;
+      c.addEventListener("click", function () { ask(q); }); wrap.appendChild(c);
+    });
+    log.appendChild(wrap);
+  }
+  function ask(q) {
+    q = q.trim(); if (!q) return;
+    addMsg("user", q); input.value = "";
+    var t = document.createElement("div"); t.className = "msg bot"; t.setAttribute("aria-label", "Assistant is typing");
+    t.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>'; log.appendChild(t); log.scrollTop = log.scrollHeight;
+    setTimeout(function () { t.remove(); var a = answer(q); addMsg("bot", a.text, a.sources); }, 350);
+  }
+  function setOpen(open) {
+    panel.hidden = !open; launcher.setAttribute("aria-expanded", open ? "true" : "false");
+    launcher.setAttribute("aria-label", open ? "Close IT assistant chat" : "Open IT assistant chat");
+    if (hint) hint.hidden = true;
+    if (open) {
+      if (!started) { started = true; addMsg("bot", "Hi! I'm your IT assistant. I can answer questions about the board, tasks and the IT meeting."); addChips(); }
+      input.focus();
+    } else { launcher.focus(); }
+  }
+  launcher.addEventListener("click", function () { setOpen(panel.hidden); });
+  closeBtn.addEventListener("click", function () { setOpen(false); if (window.ChatbotGreetingHook) window.ChatbotGreetingHook.stop(); });
+  form.addEventListener("submit", function (ev) { ev.preventDefault(); ask(input.value); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && !panel.hidden) setOpen(false); });
+  setTimeout(function () { if (hint) hint.hidden = true; }, 12000);
+  window.ITAssistant = { answer: answer };
+})();
+</script>
 </body>
 </html>
