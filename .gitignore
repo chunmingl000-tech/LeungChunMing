@@ -1,0 +1,7 @@
+# Editor lock files
+~$*
+# Local assistant settings and unrelated documents
+.claude/
+.github/prompts/
+*.docx
+*.xlsx
