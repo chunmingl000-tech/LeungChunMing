@@ -234,10 +234,52 @@ main, header, nav, section.filters { position: relative; z-index: 1; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .title3d { transform: none; }
 }
+/* ===== v2: full 3D world ===== */
+body { background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%; animation: aurora 18s ease-in-out infinite alternate; }
+@keyframes aurora { 0% { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0 } 100% { background-position: 30% 40%, 70% 30%, 40% 60%, 0 0 } }
+.wrap { perspective: 1400px; }
+
+/* rotating 3D cube with live counts */
+.scene { width: 150px; height: 150px; perspective: 700px; flex: 0 0 auto; margin: 0 var(--sp-5); }
+.cube { position: relative; width: 100px; height: 100px; margin: 25px; transform-style: preserve-3d; animation: spin 14s linear infinite; }
+.cube:hover { animation-play-state: paused; }
+@keyframes spin { from { transform: rotateX(-24deg) rotateY(0) } to { transform: rotateX(-24deg) rotateY(360deg) } }
+.face { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: #fff; border-radius: 18px; border: 3px solid rgba(255,255,255,.7);
+  font-family: var(--font-head); font-weight: 700; line-height: 1; box-shadow: inset 0 0 22px rgba(255,255,255,.35); backface-visibility: visible; }
+.face b { display: block; font-size: 2.2rem; text-shadow: 2px 2px 0 rgba(0,0,0,.25), 4px 4px 0 rgba(0,0,0,.12); }
+.face small { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; }
+.f1 { background: #8b5cf6; transform: translateZ(50px); }
+.f2 { background: #0c9be0; transform: rotateY(90deg) translateZ(50px); }
+.f3 { background: #e08a00; transform: rotateY(180deg) translateZ(50px); }
+.f4 { background: #0b9f74; transform: rotateY(-90deg) translateZ(50px); }
+.f5 { background: #ff4f9a; transform: rotateX(90deg) translateZ(50px); }
+.f6 { background: #d63a4e; transform: rotateX(-90deg) translateZ(50px); }
+.cube-shadow { position: absolute; left: 25px; right: 25px; bottom: -4px; height: 18px; border-radius: 50%; background: radial-gradient(rgba(91,52,196,.35), transparent 70%); }
+
+/* tilt-on-hover depth (set by JS via --tx / --ty) */
+.kpi, .proj, .card, .tl-item { transform: perspective(800px) rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)); transition: transform .12s ease-out, box-shadow .15s; will-change: transform; }
+.card:hover { transform: perspective(800px) rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)) translateZ(14px); }
+.kpi { transform-style: preserve-3d; }
+.kpi .kpi-num { transform: translateZ(40px) rotateX(10deg) rotateY(-6deg); }
+.kpi:hover { box-shadow: 0 24px 40px rgba(91,52,196,.35), inset 0 -6px 0 rgba(0,0,0,.12); }
+.column { box-shadow: 0 14px 0 -6px rgba(139,92,246,.18), 0 20px 30px rgba(91,52,196,.12); transform: perspective(1200px) rotateX(2deg); }
+.column.drop-target { transform: perspective(1200px) rotateX(0) scale(1.02); }
+.panel { animation: flipin .5s cubic-bezier(.2,.8,.3,1); transform-origin: top center; }
+@keyframes flipin { from { opacity: 0; transform: perspective(1200px) rotateX(-24deg) translateY(20px) } to { opacity: 1; transform: none } }
+.tab { box-shadow: 0 5px 0 var(--line); }
+.tab[aria-selected="true"] { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,.22); }
+.tab:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--line); }
+.title3d { font-size: clamp(2.6rem, 7vw, 5rem); }
+.title3d span { background: linear-gradient(180deg, #fff 40%, #ffe1f2); -webkit-background-clip: text; background-clip: text; }
+.blob { box-shadow: inset -12px -12px 24px rgba(0,0,0,.12), inset 10px 10px 20px rgba(255,255,255,.6); }
+.b4 { width: 70px; height: 70px; background: #ffe38a; top: 40%; left: 48%; animation-delay: -2s; }
+.b5 { width: 100px; height: 100px; background: #9ff0d3; top: 8%; right: 12%; animation-delay: -5s; }
+@media (max-width: 640px) { .scene { display: none; } }
+@media (prefers-reduced-motion: reduce) { body { animation: none !important; } .cube { animation: none !important; transform: rotateX(-24deg) rotateY(-30deg); } }
 </style>
 </head>
 <body>
-<div class="blob b1" aria-hidden="true"></div><div class="blob b2" aria-hidden="true"></div><div class="blob b3" aria-hidden="true"></div>
+<div class="blob b4" aria-hidden="true"></div><div class="blob b5" aria-hidden="true"></div><div class="blob b1" aria-hidden="true"></div><div class="blob b2" aria-hidden="true"></div><div class="blob b3" aria-hidden="true"></div>
 
 <div class="wrap">
 <header class="app-header">
@@ -245,13 +287,24 @@ main, header, nav, section.filters { position: relative; z-index: 1; }
     <h1 class="title3d" id="title3d" aria-label="Project Board">Project Board</h1>
     <p class="tagline">Little tasks, big sparkle. Drag, plan and celebrate!</p>
   </div>
+  <div class="scene" aria-hidden="true">
+    <div class="cube">
+      <div class="face f1"><div><b data-cube="total">0</b><small>Total</small></div></div>
+      <div class="face f2"><div><b data-cube="In Progress">0</b><small>Doing</small></div></div>
+      <div class="face f3"><div><b data-cube="Blocked">0</b><small>Blocked</small></div></div>
+      <div class="face f4"><div><b data-cube="Done">0</b><small>Done</small></div></div>
+      <div class="face f5"><div><b data-cube="Backlog">0</b><small>Backlog</small></div></div>
+      <div class="face f6"><div><b data-cube="overdue">0</b><small>Overdue</small></div></div>
+    </div>
+    <div class="cube-shadow"></div>
+  </div>
   <div class="header-actions">
     <div class="music" id="music">
       <button type="button" class="btn" id="musicBtn" aria-pressed="false" aria-label="Play background music">
         <svg id="icoPlay" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
         <svg id="icoPause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" hidden><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
       </button>
-      <label for="vol">Chill music<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></label>
+      <label for="vol">Happy music<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></label>
       <input type="range" id="vol" min="0" max="100" value="45" aria-label="Music volume">
     </div>
     <button type="button" class="btn btn-primary" id="openAdd">
@@ -524,7 +577,30 @@ function renderProjects() {
   }); });
 }
 
-function renderAll() { renderKpis(); renderBoard(); renderTimeline(); renderProjects(); }
+function renderCube() {
+  document.querySelectorAll("[data-cube]").forEach(function (el) {
+    const k = el.dataset.cube;
+    el.textContent = k === "total" ? state.tasks.length : k === "overdue" ? state.tasks.filter(isOverdue).length
+      : state.tasks.filter(function (t) { return t.status === k; }).length;
+  });
+}
+function renderAll() { renderKpis(); renderCube(); renderBoard(); renderTimeline(); renderProjects(); }
+
+/* 3D tilt: cards lean toward the pointer */
+function wireTilt() {
+  if (REDUCED) return;
+  const sel = ".kpi, .proj, .card, .tl-item";
+  document.addEventListener("pointermove", function (ev) {
+    const el = ev.target.closest && ev.target.closest(sel);
+    if (!el || el.classList.contains("dragging")) return;
+    const r = el.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width - .5, y = (ev.clientY - r.top) / r.height - .5;
+    el.style.setProperty("--ty", (x * 14) + "deg"); el.style.setProperty("--tx", (-y * 14) + "deg");
+  });
+  document.addEventListener("pointerout", function (ev) {
+    const el = ev.target.closest && ev.target.closest(sel);
+    if (el && !el.contains(ev.relatedTarget)) { el.style.removeProperty("--tx"); el.style.removeProperty("--ty"); }
+  });
+}
 
 /* ===== 7. ACTIONS ===== */
 function moveTask(id, status) {
@@ -681,7 +757,21 @@ function setup3dTitle() {
 /* ===== 12. MUSIC: a soft generative lo-fi loop made with Web Audio (no files, no network) ===== */
 const music = { ctx: null, master: null, timer: null, step: 0, playing: false };
 const CHORDS = [[57, 60, 64, 67], [53, 57, 60, 64], [48, 52, 55, 59], [55, 59, 62, 65]]; // Am7 Fmaj7 Cmaj7 G6
-const BPM = 84;
+const BPM = 100;
+const MELODY = [4, 3, 2, 3, 4, 4, 4, -1, 3, 3, 3, -1, 4, 6, 6, -1]; // chord-tone indices; 4/6 = octave-up tones
+function noiseBurst(when, dur, gain, hp) {
+  const c = music.ctx, len = Math.floor(c.sampleRate * dur), buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+  const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+  s.buffer = buf; f.type = "highpass"; f.frequency.value = hp; g.gain.value = gain;
+  s.connect(f); f.connect(g); g.connect(music.master); s.start(when);
+}
+function kick(when) {
+  const c = music.ctx, o = c.createOscillator(), g = c.createGain();
+  o.frequency.setValueAtTime(150, when); o.frequency.exponentialRampToValueAtTime(45, when + 0.15);
+  g.gain.setValueAtTime(0.5, when); g.gain.exponentialRampToValueAtTime(0.0001, when + 0.25);
+  o.connect(g); g.connect(music.master); o.start(when); o.stop(when + 0.3);
+}
 function mtof(n) { return 440 * Math.pow(2, (n - 69) / 12); }
 function tone(freq, when, dur, type, gain) {
   const c = music.ctx, o = c.createOscillator(), g = c.createGain();
@@ -700,6 +790,17 @@ function scheduleBar(barIdx, t0) {
     if (Math.random() < 0.85) tone(mtof(chord[idx] + 12), t0 + i * beat / 2, beat * 0.9, "sine", 0.09);
   });
   tone(mtof(chord[0] - 12), t0 + beat * 2.5, beat * 0.6, "sine", 0.12);
+  // happy beat: kick on 1 & 3, snare-ish on 2 & 4, hats on every 8th
+  for (let b = 0; b < 4; b++) {
+    if (b % 2 === 0) kick(t0 + b * beat); else noiseBurst(t0 + b * beat, 0.12, 0.18, 1800);
+    noiseBurst(t0 + b * beat, 0.03, 0.07, 7000); noiseBurst(t0 + b * beat + beat / 2, 0.03, 0.05, 7000);
+  }
+  // bouncy melody (16ths on a pentatonic-ish chord-tone line)
+  MELODY.forEach(function (m, i) {
+    if (m < 0) return;
+    const note = chord[m % 4] + (m >= 4 ? 24 : 12);
+    tone(mtof(note), t0 + i * beat / 4, beat * 0.28, "square", 0.025);
+  });
 }
 function musicTick() {
   const beat = 60 / BPM;
@@ -743,7 +844,7 @@ function init() {
   PROJECTS.forEach(function (x) { fp.insertAdjacentHTML("beforeend", '<option value="' + escapeHtml(x) + '">' + escapeHtml(x) + '</option>'); });
   PRIORITIES.forEach(function (x) { fr.insertAdjacentHTML("beforeend", '<option value="' + escapeHtml(x) + '">' + escapeHtml(x) + '</option>'); });
   state.tasks = seedTasks();
-  resetForm(); setup3dTitle(); wireTabs(); wireBoardEvents(); wireFilters(); wireModal(); wireMusic();
+  resetForm(); setup3dTitle(); wireTabs(); wireBoardEvents(); wireFilters(); wireModal(); wireMusic(); wireTilt();
   renderAll();
 }
 init();
